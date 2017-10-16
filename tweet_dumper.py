@@ -62,11 +62,6 @@ def get_all_tweets(screen_name, dir=os.getcwd()):
         writer.writerows(outtweets)
     pass
 
-
-if __name__ == '__main__':
-    # pass in the username of the account you want to download
-    get_all_tweets("J_tsar")
-
 # Do not run this unless you want to reindex all tweets and want to have a coffee break
 def get_labeled_tweets():
     with open('TwitterAccounts.csv', 'rb') as accounts_csv:
