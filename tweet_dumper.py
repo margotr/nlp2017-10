@@ -13,7 +13,6 @@ consumer_secret = "wbF6OrDiQf1bMdghVo27HUpYLd2E0eiw5iARXZKWfmIhiVDP6v"
 access_key = "919862426300043264-YCjEBrp6s5IsvL4RH9zTaKgkTabekzN"
 access_secret = "NOIgJ7yHXi2bU2n3xDLzrTSr8DBw739h2vv3YvDNLNOWa"
 
-
 def get_all_tweets(screen_name, dir=os.getcwd()):
     # Twitter only allows access to a users most recent 3240 tweets with this method
 
@@ -26,7 +25,11 @@ def get_all_tweets(screen_name, dir=os.getcwd()):
     alltweets = []
 
     # make initial request for most recent tweets (200 is the maximum allowed count)
-    new_tweets = api.user_timeline(screen_name=screen_name, count=200)
+    try:
+        new_tweets = api.user_timeline(screen_name=screen_name, count=200)
+    except:
+        print 'Issues for', screen_name,'. Not indexing this one.'
+        return
 
     # save most recent tweets
     alltweets.extend(new_tweets)
@@ -72,7 +75,7 @@ def get_labeled_tweets():
             filename = '%s_tweets.csv' % row[1]
             dempath = os.path.join(os.getcwd(), "rep")
             reppath = os.path.join(os.getcwd(), "dem")
-            othpath = os.path.join(os.getcwd(), "oth")
+            othpath = os.path.join(os.getcwd(), "other")
             dempath_f = os.path.join(dempath, filename)
             reppath_f = os.path.join(reppath, filename)
             othpath_f = os.path.join(othpath, filename)
