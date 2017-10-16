@@ -1,5 +1,6 @@
 from nltk.tokenize import TweetTokenizer
 from collections import Counter
+import numpy as np
 
 tokenizer = TweetTokenizer()
 
@@ -9,7 +10,6 @@ def create_ngram_vocabulary(location, n, min):
     tokens = tokenizer.tokenize(location)
 
     for i, token in enumerate(tokens):
-        print token
         if n == 1:
             ngrams.append(token)
         if n == 2 and tokens[i] != tokens[-1]:
@@ -28,4 +28,4 @@ def create_ngram_vocabulary(location, n, min):
             result.append(k)
     return result
 
-print create_ngram_vocabulary(open("realdonaldtrump_tweets.csv").read().decode('utf8'), 2, 2)
+print create_ngram_vocabulary(open("rep/@amyklobuchar_tweets.csv").read().decode('utf8'), 2, 2)
