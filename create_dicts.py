@@ -13,13 +13,14 @@ def create_ngram_vocabulary(location, n, min):
         if n == 1:
             ngrams.append(token)
         if n == 2 and tokens[i] != tokens[-1]:
-            ngrams.append(token, tokens[i + 1])
+            ngrams.append((token, tokens[i + 1]))
+            print ngrams[0]
         if n == 3 and tokens[i] != tokens[-1]:
-            ngrams.append(token, tokens[i + 1], tokens[i + 2])
+            ngrams.append((token, tokens[i + 1], tokens[i + 2]))
         if n == 4 and tokens[i] != tokens[-1]:
-            ngrams.append(token, tokens[i + 1], tokens[i + 2], tokens[i + 3])
+            ngrams.append((token, tokens[i + 1], tokens[i + 2], tokens[i + 3]))
         if n == 5 and tokens[i] != tokens[-1]:
-            ngrams.append(token, tokens[i + 1], tokens[i + 2], tokens[i + 3], token[i + 4])
+            ngrams.append((token, tokens[i + 1], tokens[i + 2], tokens[i + 3], token[i + 4]))
 
     d = Counter(ngrams)
     result = []
