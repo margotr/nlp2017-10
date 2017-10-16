@@ -14,7 +14,7 @@ access_key = "919862426300043264-YCjEBrp6s5IsvL4RH9zTaKgkTabekzN"
 access_secret = "NOIgJ7yHXi2bU2n3xDLzrTSr8DBw739h2vv3YvDNLNOWa"
 
 
-def get_all_tweets(screen_name, dir="C:/Users/Margot/PycharmProjects/nlp2017"):
+def get_all_tweets(screen_name, dir=os.getcwd()):
     # Twitter only allows access to a users most recent 3240 tweets with this method
 
     # authorize twitter, initialize tweepy
@@ -75,9 +75,9 @@ def get_labeled_tweets():
             label = row[3]
 
             filename = '%s_tweets.csv' % row[1]
-            dempath = "C:/Users/Margot/PycharmProjects/nlp2017/rep"
-            reppath = "C:/Users/Margot/PycharmProjects/nlp2017/dem"
-            othpath = "C:/Users/Margot/PycharmProjects/nlp2017/other"
+            dempath = os.path.join(os.getcwd(), "rep")
+            reppath = os.path.join(os.getcwd(), "dem")
+            othpath = os.path.join(os.getcwd(), "oth")
             dempath_f = os.path.join(dempath, filename)
             reppath_f = os.path.join(reppath, filename)
             othpath_f = os.path.join(othpath, filename)
