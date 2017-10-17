@@ -118,8 +118,8 @@ def create_dict(ngram, min, filename):
 
     outfile.close()
 
-create_dict(1, 30, "1gram_min30.txt")
-create_dict(2, 20, "2gram_min20.txt")
-create_dict(3, 10, "3gram_min10.txt")
-create_dict(4, 7, "4gram_min7.txt")
-create_dict(5, 5, "5gram_min5.txt")
+create_dict(1, 25, "1gram_min25.txt")
+create_dict(2, 25, "2gram_min25.txt")
+create_dict(3, 25, "3gram_min25.txt")
+create_dict(4, 25, "4gram_min25.txt")
+create_dict(5, 25, "5gram_min25.txt")

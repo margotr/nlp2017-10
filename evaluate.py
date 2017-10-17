@@ -9,9 +9,9 @@ import ast
 tokenizer = TweetTokenizer()
 
 
-def classify_files(dir, eval_file_name, n):
+def classify_files(dir, eval_file_name, n, threshold):
     # Open ngrams dict fil
-    dict_file = ""
+    dict_file = n,"gram_min",threshold,".txt"
     if n == 1:
         dict_file = "1gram_min30.txt"
     elif n == 2:
@@ -67,9 +67,9 @@ def classify_files(dir, eval_file_name, n):
     json.dump(predictions, eval_file)
 
 
-def evaluate_scores(n):
-    classify_files('train_data/rep', 'evaluationREP%s.txt' % n, n)
-    classify_files('train_data/dem', 'evaluationDEM%s.txt' % n, n)
+def evaluate_scores(n, threshold, trainortest):
+    classify_files('%s_data/rep'%trainortest, 'evaluationREP%s.txt' % n, n, threshold)
+    classify_files('%s_data/dem'%trainortest, 'evaluationDEM%s.txt' % n, n, threshold)
 
     demcorrect = 0
     demwrong = 0
@@ -94,17 +94,24 @@ def evaluate_scores(n):
         if rep_classifications[c] == 'd':
             repwrong += 1
 
-    print "FOR N = ", n
+    print "FOR N = ", n, " threshold = ", threshold, "on data: ", trainortest
     print "Correctly classified as democrat: ", demcorrect
     print "Correctly classified as republican: ", repcorrect
     print "Incorrectly classified as republican: ", demwrong
     print "Incorrectly classified as democrat ", repwrong
     print "Total guessed correct: ", (demcorrect + repcorrect), " out of ", (
         demcorrect + repcorrect + demwrong + repwrong)
+    print "-------------------------------------"
+
+evaluate_scores(1, 25, 'train')
+evaluate_scores(2, 25, 'train')
+evaluate_scores(3, 25, 'train')
+evaluate_scores(4, 25, 'train')
+evaluate_scores(5, 25, 'train')
 
 
-evaluate_scores(1)
-evaluate_scores(2)
-evaluate_scores(3)
-evaluate_scores(4)
-evaluate_scores(5)
+evaluate_scores(1, 25, 'test')
+evaluate_scores(2, 25, 'test')
+evaluate_scores(3, 25, 'test')
+evaluate_scores(4, 25, 'test')
+evaluate_scores(5, 25, 'test')
