@@ -39,8 +39,9 @@ def create_vocaubaly(ngram, min):
     return create_ngram_vocabulary(fulltext.decode('utf8').lower(), ngram, min)
 
 
-def all_tokens_in_class(DorM):
+def all_tokens_in_class(ngram, DorM):
     tokens = []
+    ngrams = []
     fulltext = " "
     if DorM == "D":
         for root, dirs, files in os.walk("dem"):
@@ -54,8 +55,19 @@ def all_tokens_in_class(DorM):
                 fulltext = fulltext + open(locationRep + "/" + f).read()
             fulltext = fulltext.lower()
             tokens = tokenizer.tokenize(fulltext.decode('utf8'))
-    return tokens
-
+    for i, token in enumerate(tokens):
+        if ngram == 1:
+            ngrams.append(token)
+        if n == 2 and tokens[i] != tokens[-1]:
+            ngrams.append((token, tokens[i + 1]))
+        if n == 3 and tokens[i] != tokens[-2] and tokens[i] != tokens[-1]:
+            ngrams.append((token, tokens[i + 1], tokens[i + 2]))
+        if n == 4 and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and tokens[i] != tokens[-1]:
+            ngrams.append((token, tokens[i + 1], tokens[i + 2], tokens[i + 3]))
+        if n == 5 and tokens[i] != tokens[-4] and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and tokens[i] != \
+                tokens[-1]:
+            ngrams.append((token, tokens[i + 1], tokens[i + 2], tokens[i + 3], tokens[i + 4]))
+    return ngrams
 
 def create_dict(ngram, min, filename):
     print("creating vocabulary")
@@ -63,14 +75,16 @@ def create_dict(ngram, min, filename):
     V = len(vocabulary)
     k = 1
     print("create DEM tokens")
-    dem_token = all_tokens_in_class('D')
+    dem_token = all_tokens_in_class(ngram, 'D')
     dem_token_len = len(dem_token)
     print("create REP tokens")
-    rep_token = all_tokens_in_class('R')
+    rep_token = all_tokens_in_class(ngram, 'R')
     rep_token_len = len(rep_token)
     with open(filename, "w+") as f:
         print("creating ")
         print("length vocab: ", len(vocabulary))
+
+
         for word in vocabulary:
             print("count rep occurances of ",word)
             repOc = 0
