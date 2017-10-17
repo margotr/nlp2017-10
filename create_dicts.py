@@ -110,14 +110,15 @@ def create_dict(ngram, min, filename):
             dem_wordcount[dem_token_ngram] += 1
 
     combined_wordmeasure = dict.fromkeys(vocabulary, 0)
-    for w in vocabulary:
-        combined_wordmeasure[w] = [(float(rep_wordcount[w]) + k) / ((rep_token_len) + (k * V)),
-                                   (float(dem_wordcount[w]) + k) / ((dem_token_len) + (k * V))]
+    for ngram in vocabulary:
+        combined_wordmeasure[ngram] = [(float(rep_wordcount[ngram]) + k) / ((rep_token_len) + (k * V)),
+                                   (float(dem_wordcount[ngram]) + k) / ((dem_token_len) + (k * V))]
 
     with open(filename, 'w+') as outfile:
-        json.dump(combined_wordmeasure, outfile)
+        json.dump(str(combined_wordmeasure), outfile)
 
     outfile.close()
 
 
-create_dict(1, 25, "bigram_min25.txt")
+#create_dict(1, 25, "bigram_min25.txt")
+create_dict(5, 5, "fivegram_min10.txt")
