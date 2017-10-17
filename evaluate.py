@@ -1,35 +1,95 @@
 import sys
+import os
+from nltk.tokenize import TweetTokenizer
+import json
 
-def read_predictions(filename):
-    """ Read predictions into dictionary"""
-    d = {}
-    with open(filename) as f:
-        for line in f:
-           (key, val) = line.split()
-           d[key] = val
-    return d
+tokenizer = TweetTokenizer()
+
+def classify_files(dir, predictions_file, eval_file_name, n):
+
+    # Open ngrams predicrtion file
+    with open(predictions_file) as json_file:
+        data = json.load(json_file)
+
+    print data
+
+    # Open evaluation file
+    eval_file = open(eval_file_name, 'w+')
+
+    # Put the predictions in a dict
+    predictions = {}
 
 
-# Read in arguments
-ground_truth_file = sys.argv[1]
-results_file = sys.argv[2]
+    for root, dirs, filenames in os.walk(dir):
+        for f in filenames:
+            tokens = tokenizer.tokenize(open(os.path.join(root, f)).read().lower().decode('utf8'))
+            ngrams = []
+            pRep = 0 # For each file, we calculate the probability it is in Rep
+            pDem = 0 # For each file, we calculate the probability it is in Dem
+            for i, token in enumerate(tokens):
+                if n == 1:
+                    ngrams.append(token)
+                if n == 2 and tokens[i] != tokens[-1]:
+                    ngrams.append((token, tokens[i + 1]))
+                if n == 3 and tokens[i] != tokens[-2] and tokens[i] != tokens[-1]:
+                    ngrams.append((token, tokens[i + 1], tokens[i + 2]))
+                if n == 4 and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and tokens[i] != tokens[-1]:
+                    ngrams.append((token, tokens[i + 1], tokens[i + 2], tokens[i + 3]))
+                if n == 5 and tokens[i] != tokens[-4] and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and \
+                                tokens[i] != tokens[-1]:
+                    ngrams.append((token, tokens[i + 1], tokens[i + 2], tokens[i + 3], tokens[i + 4]))
 
-print "Results file " + results_file
-print "Groundtruth file " + ground_truth_file
+            # Find the likelihood for each ngram in the file
+            for ngram in ngrams:
+                if ngram in data:
+                    print 'Now doing %s' % ngram
+                    pRep += data[str(ngram)][0]
+                    pDem += data[str(ngram)][1]
 
-results_map = read_predictions(results_file)
-ground_truth_map = read_predictions(ground_truth_file)
+            if pRep > pDem:
+                predictions[f] = pRep
+            else:
+                predictions[f] = pDem
 
-# Calculate accuracy and print incorrect predictions
-correct = 0
-for ID,label in ground_truth_map.iteritems():
-    if ID not in results_map:
-        print "Missing predictions for " + ID
-    elif results_map[ID] == label:
-        correct = correct + 1
-    else:
-        print "Incorrect " + ID
+    json.dump(predictions, eval_file)
 
-# Print summary
-print str(correct) + " out of " + str(len(ground_truth_map)) + " were correct!"
-print "accuracy " + str(float(correct)/len(ground_truth_map))
+
+classify_files('train_data/dem', 'bigram_min25.txt', 'evaluation.txt', 1)
+
+
+
+#
+#
+# def read_predictions(filename):
+#     """ Read predictions into dictionary"""
+#     d = {}
+#     with open(filename) as f:
+#         for line in f:
+#            (key, val) = line.split()
+#            d[key] = val
+#     return d
+#
+#
+# # Read in arguments
+# ground_truth_file = sys.argv[1]
+# results_file = sys.argv[2]
+#
+# print "Results file " + results_file
+# print "Groundtruth file " + ground_truth_file
+#
+# results_map = read_predictions(results_file)
+# ground_truth_map = read_predictions(ground_truth_file)
+#
+# # Calculate accuracy and print incorrect predictions
+# correct = 0
+# for ID,label in ground_truth_map.iteritems():
+#     if ID not in results_map:
+#         print "Missing predictions for " + ID
+#     elif results_map[ID] == label:
+#         correct = correct + 1
+#     else:
+#         print "Incorrect " + ID
+#
+# # Print summary
+# print str(correct) + " out of " + str(len(ground_truth_map)) + " were correct!"
+# print "accuracy " + str(float(correct)/len(ground_truth_map))
