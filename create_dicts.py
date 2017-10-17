@@ -58,13 +58,13 @@ def all_tokens_in_class(ngram, DorM):
     for i, token in enumerate(tokens):
         if ngram == 1:
             ngrams.append(token)
-        if n == 2 and tokens[i] != tokens[-1]:
+        if ngram == 2 and tokens[i] != tokens[-1]:
             ngrams.append((token, tokens[i + 1]))
-        if n == 3 and tokens[i] != tokens[-2] and tokens[i] != tokens[-1]:
+        if ngram == 3 and tokens[i] != tokens[-2] and tokens[i] != tokens[-1]:
             ngrams.append((token, tokens[i + 1], tokens[i + 2]))
-        if n == 4 and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and tokens[i] != tokens[-1]:
+        if ngram == 4 and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and tokens[i] != tokens[-1]:
             ngrams.append((token, tokens[i + 1], tokens[i + 2], tokens[i + 3]))
-        if n == 5 and tokens[i] != tokens[-4] and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and tokens[i] != \
+        if ngram == 5 and tokens[i] != tokens[-4] and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and tokens[i] != \
                 tokens[-1]:
             ngrams.append((token, tokens[i + 1], tokens[i + 2], tokens[i + 3], tokens[i + 4]))
     return ngrams
@@ -95,23 +95,22 @@ def create_dict(ngram, min, filename):
         progress = 0
         for rep_token_ngram in rep_token:
             progress += 1
-            print("Progress for rep: ", progress/rep_token_len, "%")
-            print("Checking ngram ", rep_token_ngram)
+            print "Progress for rep: ", float(progress)/float(rep_token_len), "%"
+            print "Checking ngram ", rep_token_ngram
             if rep_token_ngram in vocabulary:
-                rep_wordcount[vocabulary] += 1
+                rep_wordcount[rep_token_ngram] += 1
 
         # For each republican ngram, 'turf' if it's in the vocabulary
         progress = 0
         for dem_token_ngram in dem_token:
             progress += 1
-            print("Progress for dem: ", progress/dem_token_len, "%")
-            print("Checking ngram ", dem_token_ngram)
-            if rep_token_ngram in vocabulary:
-                dem_wordcount[vocabulary] += 1
+            print "Progress for dem: ", float(progress)/float(dem_token_len), "%"
+            print "Checking ngram ", dem_token_ngram
+            if dem_token_ngram in vocabulary:
+                dem_wordcount[dem_token_ngram] += 1
 
 
-
-                        # for word in vocabulary:
+        # for word in vocabulary:
         #     print("count rep occurances of ",word)
         #     repOc = 0
         #     for term in rep_token:
