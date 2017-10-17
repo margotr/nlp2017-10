@@ -1,6 +1,7 @@
 from nltk.tokenize import TweetTokenizer
 from collections import Counter
 import os
+import json
 
 tokenizer = TweetTokenizer()
 locationRep = "rep"
@@ -95,7 +96,7 @@ def create_dict(ngram, min, filename):
         progress = 0
         for rep_token_ngram in rep_token:
             progress += 1
-            print "Progress for rep: ", float(progress)/float(rep_token_len), "%"
+            print "Progress for rep: ", float(progress)/float(rep_token_len)*100, "%"
             print "Checking ngram ", rep_token_ngram
             if rep_token_ngram in vocabulary:
                 rep_wordcount[rep_token_ngram] += 1
@@ -104,11 +105,20 @@ def create_dict(ngram, min, filename):
         progress = 0
         for dem_token_ngram in dem_token:
             progress += 1
-            print "Progress for dem: ", float(progress)/float(dem_token_len), "%"
+            print "Progress for dem: ", float(progress)/float(dem_token_len)*100, "%"
             print "Checking ngram ", dem_token_ngram
             if dem_token_ngram in vocabulary:
                 dem_wordcount[dem_token_ngram] += 1
 
+        combined_wordcount = dict.fromkeys(vocabulary, 0)
+        for w in vocabulary:
+            combined_wordcount[w] = [rep_wordcount[w], dem_wordcount[w]]
+
+        print "Republican words:", rep_wordcount
+        print "Democrat words:", dem_wordcount
+
+        with open(filename, 'w+') as outfile:
+            json.dump(combined_wordcount, outfile)
 
         # for word in vocabulary:
         #     print("count rep occurances of ",word)
@@ -131,4 +141,4 @@ def create_dict(ngram, min, filename):
 
     f.close()
 
-create_dict(5, 25, "bigram_min25.txt")
+create_dict(1, 25, "bigram_min25.txt")
