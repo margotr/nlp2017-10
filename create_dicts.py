@@ -70,6 +70,7 @@ def create_dict(ngram, min, filename):
     rep_token_len = len(rep_token)
     with open(filename, "w+") as f:
         print("creating ")
+        print("length vocab: ", len(vocabulary))
         for word in vocabulary:
             print("count rep occurances of ",word)
             repOc = 0
@@ -82,11 +83,11 @@ def create_dict(ngram, min, filename):
                 if term == word:
                     demOc += 1
             print("calculating and writing measures")
-            rep_probability = ((float(repOc) + k) / (rep_token_len + (k * V)))
-            dem_probablity = ((float(demOc) + k) / (dem_token_len + (k * V)))
-            f.write(word + ", " + str(rep_probability) + ", " + str(dem_probablity) + "\n")
+            rep_probability = ((float(repOc) + k) / (float(rep_token_len) + (k * V)))
+            dem_probablity = ((float(demOc) + k) / (float(dem_token_len) + (k * V)))
+            f.write(str(word) + ", " + str(rep_probability) + ", " + str(dem_probablity) + "\n")
             # debug printing
             print(word, "rep: " + str(repOc), "dem: " + str(demOc))
     f.close()
 
-create_dict(2, 25, "bigram_min25.txt")
+create_dict(5, 25, "bigram_min25.txt")
