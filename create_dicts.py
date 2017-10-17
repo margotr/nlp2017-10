@@ -112,20 +112,12 @@ def create_dict(ngram, min, filename):
         if dem_token_ngram in vocabulary:
             dem_wordcount[dem_token_ngram] += 1
 
-    # combined_wordcount = dict.fromkeys(vocabulary, 0)
-    # for w in vocabulary:
-    #     combined_wordcount[w] = [rep_wordcount[w], dem_wordcount[w]]
-
     combined_wordmeasure = dict.fromkeys(vocabulary, 0)
     for w in vocabulary:
         combined_wordmeasure[w] = [(float(rep_wordcount[w]) + k) / ((rep_token_len) + (k * V)),
                                    (float(dem_wordcount[w]) + k) / ((dem_token_len) + (k * V))]
 
-    # print "Republican words:", rep_wordcount
-    # print "Democrat words:", dem_wordcount
-
     with open(filename, 'w+') as outfile:
-        # json.dump(combined_wordcount, outfile)
         json.dump(combined_wordmeasure, outfile)
 
     outfile.close()
