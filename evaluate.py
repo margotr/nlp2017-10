@@ -109,9 +109,53 @@ evaluate_scores(3, 25, 'train')
 evaluate_scores(4, 25, 'train')
 evaluate_scores(5, 25, 'train')
 
-
 evaluate_scores(1, 25, 'test')
 evaluate_scores(2, 25, 'test')
 evaluate_scores(3, 25, 'test')
 evaluate_scores(4, 25, 'test')
 evaluate_scores(5, 25, 'test')
+
+def typical_ngrams(n):
+
+    ranked_ngrams_democrat = {}
+    ranked_ngrams_republicans = {}
+
+    filename = str(n) + "gram_min5.txt"
+
+    with open(filename) as json_file:
+        data = json.load(json_file)
+    data = ast.literal_eval(data)
+
+    for ngram in data:
+        rep = data[ngram][0] / data[ngram][1]
+        ranked_ngrams_republicans[ngram] = rep
+        dem = data[ngram][1] / data[ngram][0]
+        ranked_ngrams_democrat[ngram] = dem
+
+    ranked_ngrams_democrat = sorted(ranked_ngrams_democrat, key=ranked_ngrams_democrat.get, reverse=True)
+    ranked_ngrams_republicans = sorted(ranked_ngrams_republicans, key=ranked_ngrams_republicans.get, reverse=True)
+
+    print str(n), "- grams ranked for democrat: "
+    c = 0
+    for ngram in ranked_ngrams_democrat:
+        c += 1
+        for n in ngram:
+            print n.encode("utf-8"),
+        print ""
+        if c==10:
+            break
+
+    print " ------------------- "
+
+    c = 0
+    print str(n), "- grams Ranked for republican: "
+    for ngram in ranked_ngrams_republicans:
+        c += 1
+        for n in ngram:
+            print n.encode("utf-8"),
+        print ""
+        if c == 10:
+            break
+
+
+typical_ngrams(5)
