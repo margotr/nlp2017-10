@@ -11,17 +11,7 @@ tokenizer = TweetTokenizer()
 
 def classify_files(dir, eval_file_name, n, threshold):
     # Open ngrams dict fil
-    dict_file = n,"gram_min",threshold,".txt"
-    if n == 1:
-        dict_file = "1gram_min30.txt"
-    elif n == 2:
-        dict_file = "2gram_min20.txt"
-    elif n == 3:
-        dict_file = "3gram_min10.txt"
-    elif n == 4:
-        dict_file = "4gram_min7.txt"
-    elif n == 5:
-        dict_file = "5gram_min5.txt"
+    dict_file = str(n)+"gram_min"+str(threshold)+".txt"
 
     with open(dict_file) as json_file:
         data = json.load(json_file)
@@ -54,15 +44,17 @@ def classify_files(dir, eval_file_name, n, threshold):
                                 tokens[i] != tokens[-1]:
                     ngrams.append((token, tokens[i + 1], tokens[i + 2], tokens[i + 3], tokens[i + 4]))
 
+            amount_ngrams = 0
             # Find the likelihood for each ngram in the file
             for ngram in ngrams:
                 if ngram in data:
+                    amount_ngrams+=1
                     pRep += data[ngram][0]
                     pDem += data[ngram][1]
 
             if pRep > pDem:
                 predictions[f] = "r"
-            if pDem > pRep:
+            elif pDem > pRep:
                 predictions[f] = "d"
             else:
                 predictions[f] = "u"
@@ -78,6 +70,7 @@ def evaluate_scores(n, threshold, trainortest):
     demwrong = 0
     repcorrect = 0
     repwrong = 0
+    unknown = 0
 
     with open('evaluationDEM%s.txt' % n) as dem_file:
         dem_classifications = json.load(dem_file)
@@ -87,6 +80,8 @@ def evaluate_scores(n, threshold, trainortest):
             demcorrect += 1
         if dem_classifications[c] == 'r':
             demwrong += 1
+        if dem_classifications[c] == 'u':
+            unknown += 1
 
     with open('evaluationREP%s.txt' % n) as rep_file:
         rep_classifications = json.load(rep_file)
@@ -96,12 +91,17 @@ def evaluate_scores(n, threshold, trainortest):
             repcorrect += 1
         if rep_classifications[c] == 'd':
             repwrong += 1
+        if rep_classifications[c] == 'u':
+                unknown += 1
 
     print "FOR N = ", n, " threshold = ", threshold, "on data: ", trainortest
     print "Correctly classified as democrat: ", demcorrect
     print "Correctly classified as republican: ", repcorrect
     print "Incorrectly classified as republican: ", demwrong
     print "Incorrectly classified as democrat ", repwrong
+
+    print "Unknown: ", unknown
+
     print "Total guessed correct: ", (demcorrect + repcorrect), " out of ", (
         demcorrect + repcorrect + demwrong + repwrong)
     print "-------------------------------------"
@@ -165,6 +165,3 @@ def typical_ngrams(n):
         print ""
         if c == 10:
             break
-
-
-typical_ngrams(1)
