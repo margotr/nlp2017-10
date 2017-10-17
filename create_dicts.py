@@ -7,7 +7,6 @@ tokenizer = TweetTokenizer()
 locationRep = "train_data/rep"
 locationDem = "train_data/dem"
 
-
 def create_ngram_vocabulary(file, n, min):
     ngrams = []
     tokens = tokenizer.tokenize(file)
