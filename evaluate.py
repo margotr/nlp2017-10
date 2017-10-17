@@ -7,12 +7,22 @@ import csv
 tokenizer = TweetTokenizer()
 
 
-def classify_files(dir, predictions_file, eval_file_name, n):
-    # Open ngrams predicrtion file
-    with open(predictions_file) as json_file:
-        data = json.load(json_file)
+def classify_files(dir, eval_file_name, n):
+    # Open ngrams dict fil
+    dict_file = ""
+    if n == 1:
+        dict_file = "1gram_min30.txt"
+    elif n == 2:
+        dict_file = "2gram_min20.txt"
+    elif n == 3:
+        dict_file = "3gram_min10.txt"
+    elif n == 4:
+        dict_file = "4gram_min7.txt"
+    elif n == 5:
+        dict_file = "5gram_min5.txt"
 
-    print data
+    with open(dict_file) as json_file:
+        data = json.load(json_file)[0]
 
     # Open evaluation file
     eval_file = open(eval_file_name, 'w+')
@@ -42,13 +52,12 @@ def classify_files(dir, predictions_file, eval_file_name, n):
 
             # Find the likelihood for each ngram in the file
             for ngram in ngrams:
-                if ngram in data:
-                    try:
-                        print 'Now doing %s' % ngram
+                try:
+                    if str(ngram) in data:
                         pRep += data[str(ngram)][0]
                         pDem += data[str(ngram)][1]
-                    except:
-                        print ngram, " can't be tested..."
+                except:
+                    print "Something went from for ", ngram
 
             if pRep > pDem:
                 predictions[f] = "r"
@@ -57,12 +66,10 @@ def classify_files(dir, predictions_file, eval_file_name, n):
 
     json.dump(predictions, eval_file)
 
+def evaluate_scores(n):
 
-classify_files('train_data/rep', 'bigram_min25.txt', 'evaluationREP.txt', 1)
-classify_files('train_data/dem', 'bigram_min25.txt', 'evaluationDEM.txt', 1)
-
-
-def evaluate_scores():
+    classify_files('train_data/rep', 'evaluationREP%s.txt'%n, n)
+    classify_files('train_data/dem', 'evaluationDEM%s.txt'%n, n)
 
     demcorrect = 0
     demwrong = 0
@@ -87,10 +94,15 @@ def evaluate_scores():
         if rep_classifications[c] == 'd':
             repwrong += 1
 
+    print "FOR N = ", n
     print "Correctly classified as democrat: ", demcorrect
     print "Correctly classified as republican: ", repcorrect
     print "Incorrectly classified as republican: ", demwrong
     print "Incorrectly classified as democrat ", repwrong
     print "Total guessed correct: ", (demcorrect + repcorrect), " out of ", (demcorrect + repcorrect + demwrong + repwrong)
 
-evaluate_scores()
+evaluate_scores(1)
+evaluate_scores(2)
+evaluate_scores(3)
+evaluate_scores(4)
+evaluate_scores(5)
