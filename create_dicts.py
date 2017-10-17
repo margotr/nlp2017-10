@@ -60,6 +60,8 @@ def all_tokens_in_class(DorM):
 def create_dict(ngram, min, filename):
     print("creating vocabulary")
     vocabulary = create_vocaubaly(ngram, min)
+    print vocabulary
+    print type(vocabulary)
     V = len(vocabulary)
     k = 1
     print("create DEM tokens")
@@ -68,26 +70,54 @@ def create_dict(ngram, min, filename):
     print("create REP tokens")
     rep_token = all_tokens_in_class('R')
     rep_token_len = len(rep_token)
+
+    # Create a dict with the words in the vocabulary as keys
+    rep_wordcount = dict.fromkeys(vocabulary, 0)
+    dem_wordcount = dict.fromkeys(vocabulary, 0)
+
     with open(filename, "w+") as f:
         print("creating ")
         print("length vocab: ", len(vocabulary))
-        for word in vocabulary:
-            print("count rep occurances of ",word)
-            repOc = 0
-            for term in rep_token:
-                if term == word:
-                    repOc += 1
-            print("count dem occurances of ",word)
-            demOc = 0
-            for term in dem_token:
-                if term == word:
-                    demOc += 1
-            print("calculating and writing measures")
-            rep_probability = ((float(repOc) + k) / (float(rep_token_len) + (k * V)))
-            dem_probablity = ((float(demOc) + k) / (float(dem_token_len) + (k * V)))
-            f.write(str(word) + ", " + str(rep_probability) + ", " + str(dem_probablity) + "\n")
-            # debug printing
-            print(word, "rep: " + str(repOc), "dem: " + str(demOc))
+
+        # For each republican ngram, 'turf' if it's in the vocabulary
+        progress = 0
+        for rep_token_ngram in rep_token:
+            progress += 1
+            print("Progress for rep: ", progress/rep_token_len, "%")
+            print("Checking ngram ", rep_token_ngram)
+            if rep_token_ngram in vocabulary:
+                rep_wordcount[vocabulary] += 1
+
+        # For each republican ngram, 'turf' if it's in the vocabulary
+        progress = 0
+        for dem_token_ngram in dem_token:
+            progress += 1
+            print("Progress for dem: ", progress/dem_token_len, "%")
+            print("Checking ngram ", dem_token_ngram)
+            if rep_token_ngram in vocabulary:
+                dem_wordcount[vocabulary] += 1
+
+
+
+                        # for word in vocabulary:
+        #     print("count rep occurances of ",word)
+        #     repOc = 0
+        #     for term in rep_token:
+        #         if term == word:
+        #             repOc += 1
+        #     print("count dem occurances of ",word)
+        #     demOc = 0
+        #     for term in dem_token:
+        #         if term == word:
+        #             demOc += 1
+        #
+        #     print("calculating and writing measures")
+        #     rep_probability = ((float(repOc) + k) / (float(rep_token_len) + (k * V)))
+        #     dem_probablity = ((float(demOc) + k) / (float(dem_token_len) + (k * V)))
+        #     f.write(str(word) + ", " + str(rep_probability) + ", " + str(dem_probablity) + "\n")
+        #     # debug printing
+        #     print(word, "rep: " + str(repOc), "dem: " + str(demOc))
+
     f.close()
 
 create_dict(5, 25, "bigram_min25.txt")
