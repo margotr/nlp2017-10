@@ -20,8 +20,7 @@ def create_ngram_vocabulary(file, n, min):
             ngrams.append((token, tokens[i + 1], tokens[i + 2]))
         if n == 4 and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and tokens[i] != tokens[-1]:
             ngrams.append((token, tokens[i + 1], tokens[i + 2], tokens[i + 3]))
-        if n == 5 and tokens[i] != tokens[-4] and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and tokens[i] != \
-                tokens[-1]:
+        if n == 5 and tokens[i] != tokens[-4] and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and tokens[i] != tokens[-1]:
             ngrams.append((token, tokens[i + 1], tokens[i + 2], tokens[i + 3], tokens[i + 4]))
     d = Counter(ngrams)
     result = []
@@ -67,9 +66,7 @@ def all_tokens_in_class(ngram, DorM):
             ngrams.append((token, tokens[i + 1], tokens[i + 2]))
         if ngram == 4 and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and tokens[i] != tokens[-1]:
             ngrams.append((token, tokens[i + 1], tokens[i + 2], tokens[i + 3]))
-        if ngram == 5 and tokens[i] != tokens[-4] and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and tokens[
-            i] != \
-                tokens[-1]:
+        if ngram == 5 and tokens[i] != tokens[-4] and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and tokens[i] != tokens[-1]:
             ngrams.append((token, tokens[i + 1], tokens[i + 2], tokens[i + 3], tokens[i + 4]))
     return ngrams
 
