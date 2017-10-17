@@ -57,7 +57,7 @@ def classify_files(dir, eval_file_name, n):
                         pRep += data[str(ngram)][0]
                         pDem += data[str(ngram)][1]
                 except:
-                    print "Something went from for ", ngram
+                    print "Something went from for", ngram
 
             if pRep > pDem:
                 predictions[f] = "r"
@@ -66,17 +66,17 @@ def classify_files(dir, eval_file_name, n):
 
     json.dump(predictions, eval_file)
 
-def evaluate_scores(n):
 
-    classify_files('train_data/rep', 'evaluationREP%s.txt'%n, n)
-    classify_files('train_data/dem', 'evaluationDEM%s.txt'%n, n)
+def evaluate_scores(n):
+    classify_files('train_data/rep', 'evaluationREP%s.txt' % n, n)
+    classify_files('train_data/dem', 'evaluationDEM%s.txt' % n, n)
 
     demcorrect = 0
     demwrong = 0
     repcorrect = 0
     repwrong = 0
 
-    with open('evaluationDEM.txt') as dem_file:
+    with open('evaluationDEM%s.txt'%n) as dem_file:
         dem_classifications = json.load(dem_file)
 
     for c in dem_classifications:
@@ -85,7 +85,7 @@ def evaluate_scores(n):
         if dem_classifications[c] == 'r':
             demwrong += 1
 
-    with open('evaluationREP.txt') as rep_file:
+    with open('evaluationREP%s.txt'%n) as rep_file:
         rep_classifications = json.load(rep_file)
 
     for c in rep_classifications:
@@ -100,6 +100,7 @@ def evaluate_scores(n):
     print "Incorrectly classified as republican: ", demwrong
     print "Incorrectly classified as democrat ", repwrong
     print "Total guessed correct: ", (demcorrect + repcorrect), " out of ", (demcorrect + repcorrect + demwrong + repwrong)
+
 
 evaluate_scores(1)
 evaluate_scores(2)
