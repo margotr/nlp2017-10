@@ -3,6 +3,8 @@ import os
 from nltk.tokenize import TweetTokenizer
 import json
 import csv
+import ast
+
 
 tokenizer = TweetTokenizer()
 
@@ -23,6 +25,8 @@ def classify_files(dir, eval_file_name, n):
 
     with open(dict_file) as json_file:
         data = json.load(json_file)
+
+    data = ast.literal_eval(data)
 
     # Open evaluation file
     eval_file = open(eval_file_name, 'w+')
@@ -53,10 +57,8 @@ def classify_files(dir, eval_file_name, n):
             # Find the likelihood for each ngram in the file
             for ngram in ngrams:
                 if ngram in data:
-                    print data[str(ngram)][0]
-                    print data[str(ngram)][1]
-                    pRep += data[str(ngram)][0]
-                    pDem += data[str(ngram)][1]
+                    pRep += data[ngram][0]
+                    pDem += data[ngram][1]
             if pRep > pDem:
                 predictions[f] = "r"
             else:
@@ -98,7 +100,7 @@ def evaluate_scores(n):
     print "Incorrectly classified as republican: ", demwrong
     print "Incorrectly classified as democrat ", repwrong
     print "Total guessed correct: ", (demcorrect + repcorrect), " out of ", (
-    demcorrect + repcorrect + demwrong + repwrong)
+        demcorrect + repcorrect + demwrong + repwrong)
 
 
 evaluate_scores(1)
