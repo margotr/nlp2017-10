@@ -38,21 +38,20 @@ def get_all_tweets(screen_name, dir=os.getcwd()):
     oldest = alltweets[-1].id - 1
 
     # keep grabbing tweets until there are no tweets left to grab
-    while len(new_tweets) > 0:
-        print
-        "getting tweets before %s" % (oldest)
-
-        # all subsiquent requests use the max_id param to prevent duplicates
-        new_tweets = api.user_timeline(screen_name=screen_name, count=200, max_id=oldest)
-
-        # save most recent tweets
-        alltweets.extend(new_tweets)
-
-        # update the id of the oldest tweet less one
-        oldest = alltweets[-1].id - 1
-
-        print
-        "...%s tweets downloaded so far" % (len(alltweets))
+    # while len(new_tweets) > 0:
+    #     print "getting tweets before %s" % (oldest)
+    #
+    #     # all subsiquent requests use the max_id param to prevent duplicates
+    #     new_tweets = api.user_timeline(screen_name=screen_name, count=1, max_id=oldest)
+    #
+    #     # save most recent tweets
+    #     alltweets.extend(new_tweets)
+    #
+    #     # update the id of the oldest tweet less one
+    #     oldest = alltweets[-1].id - 1
+    #
+    #     print "...%s tweets downloaded so far" % (len(alltweets))
+    #     print "for %s" % screen_name
 
     # transform the tweepy tweets into a 2D array that will populate the csv
     outtweets = [[tweet.text.encode("utf-8")] for tweet in alltweets]
@@ -81,16 +80,16 @@ def get_labeled_tweets():
             othpath_f = os.path.join(othpath, filename)
 
             # Don't try to index tweets we already have
-            if not(os.path.exists(dempath_f) or os.path.exists(reppath_f) or os.path.exists(othpath_f)):
-                if label == 'r':
-                    get_all_tweets(row[1], reppath)
-                elif label == 'd':
-                    get_all_tweets(row[1], dempath)
-                else:
-                    get_all_tweets(row[1], othpath)
-                print "Done: ", row[1], row[3]
+            # if not(os.path.exists(dempath_f) or os.path.exists(reppath_f) or os.path.exists(othpath_f)):
+            if label == 'r':
+                get_all_tweets(row[1], reppath)
+            elif label == 'd':
+                get_all_tweets(row[1], dempath)
             else:
-                print "Already indexed ", row[1]
+                get_all_tweets(row[1], othpath)
+            print "Done: ", row[1], row[3]
+            # else:
+                #print "Already indexed ", row[1]
         accounts_csv.close()
 
 get_labeled_tweets()
