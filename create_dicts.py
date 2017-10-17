@@ -46,13 +46,13 @@ def all_tokens_in_class(ngram, DorM):
     ngrams = []
     fulltext = " "
     if DorM == "D":
-        for root, dirs, files in os.walk("dem"):
+        for root, dirs, files in os.walk(locationDem):
             for f in files:
                 fulltext = fulltext + open(locationDem + "/" + f).read()
             fulltext = fulltext.lower()
             tokens = tokenizer.tokenize(fulltext.decode('utf8'))
     if DorM == "R":
-        for root, dirs, files in os.walk("rep"):
+        for root, dirs, files in os.walk(locationRep):
             for f in files:
                 fulltext = fulltext + open(locationRep + "/" + f).read()
             fulltext = fulltext.lower()
