@@ -24,6 +24,7 @@ def classify_files(dir, predictions_file, eval_file_name, n):
         for f in filenames:
             tokens = tokenizer.tokenize(open(os.path.join(root, f)).read().decode('utf8').lower())
             ngrams = []
+
             pRep = 0  # For each file, we calculate the probability it is in Rep
             pDem = 0  # For each file, we calculate the probability it is in Dem
             for i, token in enumerate(tokens):
@@ -62,6 +63,7 @@ classify_files('train_data/dem', 'bigram_min25.txt', 'evaluationDEM.txt', 1)
 
 
 def evaluate_scores():
+
     demcorrect = 0
     demwrong = 0
     repcorrect = 0
@@ -92,41 +94,3 @@ def evaluate_scores():
     print "Total guessed correct: ", (demcorrect + repcorrect), " out of ", (demcorrect + repcorrect + demwrong + repwrong)
 
 evaluate_scores()
-
-
-
-#
-#
-# def read_predictions(filename):
-#     """ Read predictions into dictionary"""
-#     d = {}
-#     with open(filename) as f:
-#         for line in f:
-#            (key, val) = line.split()
-#            d[key] = val
-#     return d
-#
-#
-# # Read in arguments
-# ground_truth_file = sys.argv[1]
-# results_file = sys.argv[2]
-#
-# print "Results file " + results_file
-# print "Groundtruth file " + ground_truth_file
-#
-# results_map = read_predictions(results_file)
-# ground_truth_map = read_predictions(ground_truth_file)
-#
-# # Calculate accuracy and print incorrect predictions
-# correct = 0
-# for ID,label in ground_truth_map.iteritems():
-#     if ID not in results_map:
-#         print "Missing predictions for " + ID
-#     elif results_map[ID] == label:
-#         correct = correct + 1
-#     else:
-#         print "Incorrect " + ID
-#
-# # Print summary
-# print str(correct) + " out of " + str(len(ground_truth_map)) + " were correct!"
-# print "accuracy " + str(float(correct)/len(ground_truth_map))
