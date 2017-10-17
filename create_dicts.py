@@ -7,6 +7,7 @@ tokenizer = TweetTokenizer()
 locationRep = "rep"
 locationDem = "dem"
 
+
 def create_ngram_vocabulary(file, n, min):
     ngrams = []
     tokens = tokenizer.tokenize(file)
@@ -19,7 +20,8 @@ def create_ngram_vocabulary(file, n, min):
             ngrams.append((token, tokens[i + 1], tokens[i + 2]))
         if n == 4 and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and tokens[i] != tokens[-1]:
             ngrams.append((token, tokens[i + 1], tokens[i + 2], tokens[i + 3]))
-        if n == 5 and tokens[i] != tokens[-4] and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and tokens[i] != tokens[-1]:
+        if n == 5 and tokens[i] != tokens[-4] and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and tokens[i] != \
+                tokens[-1]:
             ngrams.append((token, tokens[i + 1], tokens[i + 2], tokens[i + 3], tokens[i + 4]))
     d = Counter(ngrams)
     result = []
@@ -65,10 +67,12 @@ def all_tokens_in_class(ngram, DorM):
             ngrams.append((token, tokens[i + 1], tokens[i + 2]))
         if ngram == 4 and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and tokens[i] != tokens[-1]:
             ngrams.append((token, tokens[i + 1], tokens[i + 2], tokens[i + 3]))
-        if ngram == 5 and tokens[i] != tokens[-4] and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and tokens[i] != \
+        if ngram == 5 and tokens[i] != tokens[-4] and tokens[i] != tokens[-3] and tokens[i] != tokens[-2] and tokens[
+            i] != \
                 tokens[-1]:
             ngrams.append((token, tokens[i + 1], tokens[i + 2], tokens[i + 3], tokens[i + 4]))
     return ngrams
+
 
 def create_dict(ngram, min, filename):
     print("creating vocabulary")
@@ -88,57 +92,43 @@ def create_dict(ngram, min, filename):
     rep_wordcount = dict.fromkeys(vocabulary, 0)
     dem_wordcount = dict.fromkeys(vocabulary, 0)
 
-    with open(filename, "w+") as f:
-        print("creating ")
-        print("length vocab: ", len(vocabulary))
+    print("length vocab: ", len(vocabulary))
 
-        # For each republican ngram, 'turf' if it's in the vocabulary
-        progress = 0
-        for rep_token_ngram in rep_token:
-            progress += 1
-            print "Progress for rep: ", float(progress)/float(rep_token_len)*100, "%"
-            print "Checking ngram ", rep_token_ngram
-            if rep_token_ngram in vocabulary:
-                rep_wordcount[rep_token_ngram] += 1
+    # For each republican ngram, 'turf' if it's in the vocabulary
+    progress = 0
+    for rep_token_ngram in rep_token:
+        progress += 1
+        print "Progress for rep: ", float(progress) / float(rep_token_len) * 100, "%"
+        print "Checking ngram ", rep_token_ngram
+        if rep_token_ngram in vocabulary:
+            rep_wordcount[rep_token_ngram] += 1
 
-        # For each republican ngram, 'turf' if it's in the vocabulary
-        progress = 0
-        for dem_token_ngram in dem_token:
-            progress += 1
-            print "Progress for dem: ", float(progress)/float(dem_token_len)*100, "%"
-            print "Checking ngram ", dem_token_ngram
-            if dem_token_ngram in vocabulary:
-                dem_wordcount[dem_token_ngram] += 1
+    # For each republican ngram, 'turf' if it's in the vocabulary
+    progress = 0
+    for dem_token_ngram in dem_token:
+        progress += 1
+        print "Progress for dem: ", float(progress) / float(dem_token_len) * 100, "%"
+        print "Checking ngram ", dem_token_ngram
+        if dem_token_ngram in vocabulary:
+            dem_wordcount[dem_token_ngram] += 1
 
-        combined_wordcount = dict.fromkeys(vocabulary, 0)
-        for w in vocabulary:
-            combined_wordcount[w] = [rep_wordcount[w], dem_wordcount[w]]
+    # combined_wordcount = dict.fromkeys(vocabulary, 0)
+    # for w in vocabulary:
+    #     combined_wordcount[w] = [rep_wordcount[w], dem_wordcount[w]]
 
-        print "Republican words:", rep_wordcount
-        print "Democrat words:", dem_wordcount
+    combined_wordmeasure = dict.fromkeys(vocabulary, 0)
+    for w in vocabulary:
+        combined_wordmeasure[w] = [(float(rep_wordcount[w]) + k) / ((rep_token_len) + (k * V)),
+                                   (float(dem_wordcount[w]) + k) / ((dem_token_len) + (k * V))]
 
-        with open(filename, 'w+') as outfile:
-            json.dump(combined_wordcount, outfile)
+    # print "Republican words:", rep_wordcount
+    # print "Democrat words:", dem_wordcount
 
-        # for word in vocabulary:
-        #     print("count rep occurances of ",word)
-        #     repOc = 0
-        #     for term in rep_token:
-        #         if term == word:
-        #             repOc += 1
-        #     print("count dem occurances of ",word)
-        #     demOc = 0
-        #     for term in dem_token:
-        #         if term == word:
-        #             demOc += 1
-        #
-        #     print("calculating and writing measures")
-        #     rep_probability = ((float(repOc) + k) / (float(rep_token_len) + (k * V)))
-        #     dem_probablity = ((float(demOc) + k) / (float(dem_token_len) + (k * V)))
-        #     f.write(str(word) + ", " + str(rep_probability) + ", " + str(dem_probablity) + "\n")
-        #     # debug printing
-        #     print(word, "rep: " + str(repOc), "dem: " + str(demOc))
+    with open(filename, 'w+') as outfile:
+        # json.dump(combined_wordcount, outfile)
+        json.dump(combined_wordmeasure, outfile)
 
-    f.close()
+    outfile.close()
+
 
 create_dict(1, 25, "bigram_min25.txt")
