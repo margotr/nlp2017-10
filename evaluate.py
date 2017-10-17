@@ -22,7 +22,7 @@ def classify_files(dir, eval_file_name, n):
         dict_file = "5gram_min5.txt"
 
     with open(dict_file) as json_file:
-        data = json.load(json_file)[0]
+        data = json.load(json_file)
 
     # Open evaluation file
     eval_file = open(eval_file_name, 'w+')
@@ -52,13 +52,11 @@ def classify_files(dir, eval_file_name, n):
 
             # Find the likelihood for each ngram in the file
             for ngram in ngrams:
-                try:
-                    if str(ngram) in data:
-                        pRep += data[str(ngram)][0]
-                        pDem += data[str(ngram)][1]
-                except:
-                    print "Something went from for", ngram
-
+                if ngram in data:
+                    print data[str(ngram)][0]
+                    print data[str(ngram)][1]
+                    pRep += data[str(ngram)][0]
+                    pDem += data[str(ngram)][1]
             if pRep > pDem:
                 predictions[f] = "r"
             else:
@@ -76,7 +74,7 @@ def evaluate_scores(n):
     repcorrect = 0
     repwrong = 0
 
-    with open('evaluationDEM%s.txt'%n) as dem_file:
+    with open('evaluationDEM%s.txt' % n) as dem_file:
         dem_classifications = json.load(dem_file)
 
     for c in dem_classifications:
@@ -85,7 +83,7 @@ def evaluate_scores(n):
         if dem_classifications[c] == 'r':
             demwrong += 1
 
-    with open('evaluationREP%s.txt'%n) as rep_file:
+    with open('evaluationREP%s.txt' % n) as rep_file:
         rep_classifications = json.load(rep_file)
 
     for c in rep_classifications:
@@ -99,7 +97,8 @@ def evaluate_scores(n):
     print "Correctly classified as republican: ", repcorrect
     print "Incorrectly classified as republican: ", demwrong
     print "Incorrectly classified as democrat ", repwrong
-    print "Total guessed correct: ", (demcorrect + repcorrect), " out of ", (demcorrect + repcorrect + demwrong + repwrong)
+    print "Total guessed correct: ", (demcorrect + repcorrect), " out of ", (
+    demcorrect + repcorrect + demwrong + repwrong)
 
 
 evaluate_scores(1)
