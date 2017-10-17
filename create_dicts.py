@@ -4,8 +4,8 @@ import os
 import json
 
 tokenizer = TweetTokenizer()
-locationRep = "rep"
-locationDem = "dem"
+locationRep = "train_data/rep"
+locationDem = "train_data/dem"
 
 
 def create_ngram_vocabulary(file, n, min):
