@@ -11,7 +11,7 @@ tokenizer = TweetTokenizer()
 
 def classify_files(dir, eval_file_name, n, threshold):
     # Open ngrams dict fil
-    dict_file = str(n)+"gram_min"+str(threshold)+".txt"
+    dict_file = "no_rt_"+str(n)+"gram_min"+str(threshold)+".txt"
 
     with open(dict_file) as json_file:
         data = json.load(json_file)
@@ -140,31 +140,7 @@ def evaluate_scores(n, threshold, trainortest):
     print "-------------------------------------"
 #
 #
-evaluate_scores(1, 30, 'train')
-# evaluate_scores(2, 25, 'train')
-# evaluate_scores(3, 10, 'train')
-# evaluate_scores(4, 7, 'train')
-# evaluate_scores(5, 5, 'train')
-# #
-# evaluate_scores(1, 30, 'test')
-# evaluate_scores(2, 25, 'test')
-# evaluate_scores(3, 10, 'test')
-# evaluate_scores(4, 7, 'test')
-# evaluate_scores(5, 5, 'test')
-# #
-# #
-# #
-evaluate_scores(1, 25, 'train')
-# evaluate_scores(2, 25, 'train')
-# evaluate_scores(3, 25, 'train')
-# evaluate_scores(4, 25, 'train')
-# evaluate_scores(5, 25, 'train')
-#
-# evaluate_scores(1, 25, 'test')
-# evaluate_scores(2, 25, 'test')
-# evaluate_scores(3, 25, 'test')
-# evaluate_scores(4, 25, 'test')
-# evaluate_scores(5, 25, 'test')
+evaluate_scores(3, 10, 'test')
 
 def typical_ngrams(n):
 

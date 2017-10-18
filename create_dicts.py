@@ -4,8 +4,8 @@ import os
 import json
 
 tokenizer = TweetTokenizer()
-locationRep = "no_retweets_or_urls/train_data/rep"
-locationDem = "no_retweets_or_urls/train_data/dem"
+locationRep = "train_data/rep"
+locationDem = "train_data/dem"
 
 def create_ngram_vocabulary(file, n, min):
     ngrams = []
@@ -119,9 +119,8 @@ def create_dict(ngram, min, filename):
 
     outfile.close()
 
-create_dict(1, 30, "no_rt_1gram_min30.txt")
-create_dict(2, 25, "no_rt_2gram_min25.txt")
-create_dict(3, 10, "no_rt_3gram_min10.txt")
-create_dict(4, 7, "no_rt_4gram_min7.txt")
-create_dict(5, 5, "no_rt_5gram_min5.txt")
-
+create_dict(1, 90, "1gram_min90.txt")
+create_dict(2, 75, "2gram_min75.txt")
+create_dict(3, 30, "3gram_min30.txt")
+create_dict(4, 21, "4gram_min21.txt")
+create_dict(5, 15, "5gram_min15.txt")
