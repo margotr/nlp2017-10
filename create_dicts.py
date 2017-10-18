@@ -4,8 +4,8 @@ import os
 import json
 
 tokenizer = TweetTokenizer()
-locationRep = "train_data/rep"
-locationDem = "train_data/dem"
+locationRep = "no_retweets_or_urls/train_data/rep"
+locationDem = "no_retweets_or_urls/train_data/dem"
 
 def create_ngram_vocabulary(file, n, min):
     ngrams = []
@@ -37,7 +37,8 @@ def create_vocaubaly(ngram, min):
     for root, dirs, filenames in os.walk(locationDem):
         for f in filenames:
             fulltext = fulltext + open(locationDem + "/" + f).read()
-    return create_ngram_vocabulary(fulltext.decode('utf8').lower(), ngram, min)
+    fulltext_decoded = fulltext.decode('utf8', errors='ignore').lower()
+    return create_ngram_vocabulary(fulltext_decoded, ngram, min)
 
 
 def all_tokens_in_class(ngram, DorM):
@@ -49,13 +50,13 @@ def all_tokens_in_class(ngram, DorM):
             for f in files:
                 fulltext = fulltext + open(locationDem + "/" + f).read()
             fulltext = fulltext.lower()
-            tokens = tokenizer.tokenize(fulltext.decode('utf8'))
+            tokens = tokenizer.tokenize(fulltext.decode('utf8', errors='ignore'))
     if DorM == "R":
         for root, dirs, files in os.walk(locationRep):
             for f in files:
                 fulltext = fulltext + open(locationRep + "/" + f).read()
             fulltext = fulltext.lower()
-            tokens = tokenizer.tokenize(fulltext.decode('utf8'))
+            tokens = tokenizer.tokenize(fulltext.decode('utf8', errors='ignore'))
     for i, token in enumerate(tokens):
         if ngram == 1:
             ngrams.append(token)
@@ -118,8 +119,9 @@ def create_dict(ngram, min, filename):
 
     outfile.close()
 
-create_dict(1, 25, "1gram_min25.txt")
-create_dict(2, 25, "2gram_min25.txt")
-create_dict(3, 25, "3gram_min25.txt")
-create_dict(4, 25, "4gram_min25.txt")
-create_dict(5, 25, "5gram_min25.txt")
+create_dict(1, 30, "no_rt_1gram_min30.txt")
+create_dict(2, 25, "no_rt_2gram_min25.txt")
+create_dict(3, 10, "no_rt_3gram_min10.txt")
+create_dict(4, 7, "no_rt_4gram_min7.txt")
+create_dict(5, 5, "no_rt_5gram_min5.txt")
+

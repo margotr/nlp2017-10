@@ -61,6 +61,39 @@ def classify_files(dir, eval_file_name, n, threshold):
 
     json.dump(predictions, eval_file)
 
+def classify_single_file(file_name):
+
+    dict_file = "1gram_min25.txt"
+    with open(dict_file) as json_file:
+        data = json.load(json_file)
+
+    data = ast.literal_eval(data)
+
+
+    ngrams = []
+
+    tokens = tokenizer.tokenize(open(file_name).read().decode('utf8').lower())
+    for i, token in enumerate(tokens):
+        ngrams.append(token)
+
+    pRep = 0  # For each file, we calculate the probability it is in Rep
+    pDem = 0  # For each file, we calculate the probability it is in Dem
+
+    for ngram in ngrams:
+        if ngram in data:
+            pRep += data[ngram][0]
+            pDem += data[ngram][1]
+
+    if pRep > pDem:
+        return "r"
+    elif pDem > pRep:
+        return "d"
+    else:
+        return "u"
+
+#print classify_single_file('BarackObama_tweets.csv')
+#print classify_single_file('realDonaldTrump_tweets.csv')
+
 
 def evaluate_scores(n, threshold, trainortest):
     classify_files('%s_data/rep'%trainortest, 'evaluationREP%s.txt' % n, n, threshold)
@@ -105,25 +138,40 @@ def evaluate_scores(n, threshold, trainortest):
     print "Total guessed correct: ", (demcorrect + repcorrect), " out of ", (
         demcorrect + repcorrect + demwrong + repwrong)
     print "-------------------------------------"
-
+#
+#
+evaluate_scores(1, 30, 'train')
+# evaluate_scores(2, 25, 'train')
+# evaluate_scores(3, 10, 'train')
+# evaluate_scores(4, 7, 'train')
+# evaluate_scores(5, 5, 'train')
+# #
+# evaluate_scores(1, 30, 'test')
+# evaluate_scores(2, 25, 'test')
+# evaluate_scores(3, 10, 'test')
+# evaluate_scores(4, 7, 'test')
+# evaluate_scores(5, 5, 'test')
+# #
+# #
+# #
 evaluate_scores(1, 25, 'train')
-evaluate_scores(2, 25, 'train')
-evaluate_scores(3, 25, 'train')
-evaluate_scores(4, 25, 'train')
-evaluate_scores(5, 25, 'train')
-
-evaluate_scores(1, 25, 'test')
-evaluate_scores(2, 25, 'test')
-evaluate_scores(3, 25, 'test')
-evaluate_scores(4, 25, 'test')
-evaluate_scores(5, 25, 'test')
+# evaluate_scores(2, 25, 'train')
+# evaluate_scores(3, 25, 'train')
+# evaluate_scores(4, 25, 'train')
+# evaluate_scores(5, 25, 'train')
+#
+# evaluate_scores(1, 25, 'test')
+# evaluate_scores(2, 25, 'test')
+# evaluate_scores(3, 25, 'test')
+# evaluate_scores(4, 25, 'test')
+# evaluate_scores(5, 25, 'test')
 
 def typical_ngrams(n):
 
     ranked_ngrams_democrat = {}
     ranked_ngrams_republicans = {}
 
-    filename = str(n) + "gram_min30.txt"
+    filename = str(n) + "gram_min25.txt"
 
     with open(filename) as json_file:
         data = json.load(json_file)
@@ -165,3 +213,6 @@ def typical_ngrams(n):
         print ""
         if c == 10:
             break
+
+# typical_ngrams(1)
+# typical_ngrams(5)
